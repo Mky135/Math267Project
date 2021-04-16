@@ -1,0 +1,8 @@
+Rabbit Info:
+Average of Peaks: 84.25
+Average of Troughs: 21.225
+Average Period: 84.25
+GrassInfo:
+Average of Peaks: 135.0
+Average of Troughs: 6.750000000000001
+Average Period: 135.0

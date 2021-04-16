@@ -1,9 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class main {
 
@@ -11,10 +9,18 @@ public class main {
     static ArrayList<Double> grassPercentages;
     static ArrayList<PeakIndex> peakIndices;
     static ArrayList<PeakIndex> maxes;
-    static ArrayList<PeakIndex> mins;
-    static ArrayList<PeakIndex> tropeIndex;
+    static ArrayList<PeakIndex> troughsIndex;
     static ArrayList<Double> peaks;
 
+
+    static int squareCount = 25*30;
+    static double averagePeakForRabbit;
+    static double averageTroughForRabbit;
+    static double averagePeriodForRabbit;
+
+    static double averagePeakForGrass;
+    static double averageTroughForGrass;
+    static double averagePeriodForGrass;
 
     public static void main(String[] args) {
         FileHandler fileHandler = new FileHandler("src/data.txt");
@@ -23,33 +29,42 @@ public class main {
         peakIndices = new ArrayList<>();
         maxes = new ArrayList<>();
         peaks = new ArrayList<>();
-        mins = new ArrayList<>();
-        tropeIndex = new ArrayList<>();
+        troughsIndex = new ArrayList<>();
 
         for (int i = 0; i < fileHandler.getNumOfLines(); i++) {
             formatLine(fileHandler.getLine(i));
         }
 
-        System.out.println(rabbitPercentages);
-        System.out.println(grassPercentages);
+//        System.out.println(rabbitPercentages);
+//        System.out.println(grassPercentages);
 
+        System.out.println("Rabbit Info: ");
         lookForPeaks(rabbitPercentages);
         siftThroughPeaks();
-        averagePeaks();
-        averagePeriod();
+        averagePeakForRabbit = averagePeaks();
+        lookForTroughs(rabbitPercentages);
+        siftThroughTroughs();
+        averageTroughForRabbit = averageTroughs();
+        averagePeriodForRabbit = averagePeriod();
 
         peakIndices = new ArrayList<>();
         maxes = new ArrayList<>();
         peaks = new ArrayList<>();
+        troughsIndex = new ArrayList<>();
 
+        System.out.println("\nGrass Info: ");
         lookForPeaks(grassPercentages);
         siftThroughPeaks();
-        averagePeaks();
-        averagePeriod();
+        averagePeakForGrass = averagePeaks();
+        lookForTroughs(grassPercentages);
+        siftThroughTroughs();
+        averageTroughForGrass = averageTroughs();
+        averagePeriodForGrass = averagePeriod();
         writeToFile();
     }
 
-    public static void averagePeriod() {
+
+    public static double averagePeriod() {
         ArrayList<Integer> differencesInPeaks = new ArrayList<>();
         for (int i = 0; i < peakIndices.size() - 1; i++) {
             int dif = peakIndices.get(i+1).index - peakIndices.get(i).index;
@@ -57,8 +72,6 @@ public class main {
             if(dif >= 10)
                 differencesInPeaks.add(dif);
         }
-
-        System.out.println(differencesInPeaks);
 
         double avgDif = 0;
         for (int i = 0; i < differencesInPeaks.size(); i++) {
@@ -69,16 +82,18 @@ public class main {
 
         avgDif = avgDif/differencesInPeaks.size();
         System.out.println("Average Period: " + avgDif);
+        return avgDif;
     }
 
-    public static void averagePeaks() {
+    public static double averagePeaks() {
         double sumOfPeaks = 0;
 
         for (PeakIndex peak : peakIndices) {
             sumOfPeaks += peak.peak;
         }
 
-        System.out.println("Average of Peaks: " + sumOfPeaks / peakIndices.size());
+        System.out.println("Average of Peaks: " + ((sumOfPeaks / peakIndices.size())/100) * squareCount);
+        return ((sumOfPeaks / peakIndices.size())/100) * squareCount;
     }
 
     public static void siftThroughPeaks() {
@@ -101,6 +116,17 @@ public class main {
         }
     }
 
+    private static double averageTroughs() {
+        double sumOfTropes = 0;
+
+        for (PeakIndex peak : troughsIndex) {
+            sumOfTropes += peak.peak;
+        }
+
+        System.out.println("Average of Troughs: " + ((sumOfTropes / troughsIndex.size())/100) * squareCount);
+        return ((sumOfTropes / troughsIndex.size())/100) * squareCount;
+    }
+
     public static void lookForPeaks(ArrayList<Double> list) {
         double peak;
 
@@ -111,6 +137,39 @@ public class main {
                 peakIndices.add(new PeakIndex(peak, i));
 //                System.out.println("Peak: " + peak);
             }
+        }
+    }
+
+    public static void lookForTroughs(ArrayList<Double> list) {
+        double trope;
+
+        for (int i = 1; i < list.size() - 1; i++) {
+            if (list.get(i-1) > list.get(i)
+                    && list.get(i+1) > list.get(i)) {
+                trope = list.get(i);
+                troughsIndex.add(new PeakIndex(trope, i));
+//                System.out.println("Peak: " + peak);
+            }
+        }
+    }
+
+    public static void siftThroughTroughs() {
+        double minTrope = 100;
+        double threshold = 20;
+
+        for (PeakIndex peakIndex: troughsIndex) {
+            minTrope = Math.min(minTrope, peakIndex.peak);
+        }
+
+        ArrayList<PeakIndex> toRemove = new ArrayList<>();
+        for (PeakIndex peakIndex : troughsIndex) {
+            if(peakIndex.peak >= minTrope + threshold) {
+                toRemove.add(peakIndex);
+            }
+        }
+
+        for (PeakIndex peakIndexToRemove: toRemove) {
+            troughsIndex.remove(peakIndexToRemove);
         }
     }
 
@@ -134,7 +193,7 @@ public class main {
 
     public static void writeToFile() {
         try {
-            File myObj = new File("src/rabbitPeaks.txt");
+            File myObj = new File("src/output.txt");
             if (myObj.createNewFile()) {
                 System.out.println("File created: " + myObj.getName());
             } else {
@@ -146,10 +205,18 @@ public class main {
             e.printStackTrace();
         }
         try {
-            FileWriter myWriter = new FileWriter("src/rabbitPeaks.txt");
-            for (Double peak : peaks) {
-                myWriter.write(peak + "\n");
-            }
+            FileWriter myWriter = new FileWriter("src/output.txt");
+
+            myWriter.write("Rabbit Info:\n" +
+                    "Average of Peaks: " + averagePeriodForRabbit +
+                    "\nAverage of Troughs: " + averageTroughForRabbit +
+                    "\nAverage Period: " + averagePeriodForRabbit);
+
+            myWriter.write("\n\nGrassInfo:\n"+
+                    "Average of Peaks: " + averagePeriodForGrass +
+                    "\nAverage of Troughs: " + averageTroughForGrass +
+                    "\nAverage Period: " + averagePeriodForGrass);
+
             myWriter.close();
         } catch (IOException e) {
             System.out.println("An error occurred.");
