@@ -208,12 +208,12 @@ public class main {
             FileWriter myWriter = new FileWriter("src/output.txt");
 
             myWriter.write("Rabbit Info:\n" +
-                    "Average of Peaks: " + averagePeriodForRabbit +
+                    "Average of Peaks: " + averagePeakForRabbit +
                     "\nAverage of Troughs: " + averageTroughForRabbit +
                     "\nAverage Period: " + averagePeriodForRabbit);
 
             myWriter.write("\n\nGrassInfo:\n"+
-                    "Average of Peaks: " + averagePeriodForGrass +
+                    "Average of Peaks: " + averagePeakForGrass +
                     "\nAverage of Troughs: " + averageTroughForGrass +
                     "\nAverage Period: " + averagePeriodForGrass);
 
@@ -222,24 +222,5 @@ public class main {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-    }
-}
-
-class PeakIndex {
-
-    int index;
-    double peak;
-
-    PeakIndex(double peak, int index) {
-        this.peak = peak;
-        this.index = index;
-    }
-
-    @Override
-    public String toString() {
-        return "PeakIndex{" +
-                "index=" + index +
-                ", peak=" + peak +
-                '}';
     }
 }
