@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aa56357a-0a29-4db6-8bdd-04f8a5ee8a39" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/PeakIndex.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Math267Project/output.txt" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Math267Project/output.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Math267Project/rabbitPeaks.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/output.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/output.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +84,7 @@
       <workItem from="1618596730024" duration="10000" />
       <workItem from="1618597463445" duration="85000" />
       <workItem from="1618597570198" duration="1516000" />
-      <workItem from="1618599277709" duration="11487000" />
+      <workItem from="1618599277709" duration="15140000" />
     </task>
     <servers />
   </component>
